@@ -1,13 +1,16 @@
 ENV ?= venv
 VENV ?= venv
-PIP = $(VENV)/bin/pip3
 PYTHON = $(VENV)/bin/python3
+PIP = $(PYTHON) -m pip
 TESTENV ?= us
 
 default: test
 
 setup:
-	python3 -m venv $(VENV)
+	rm -rf $(VENV)
+	python3.11 -m venv $(VENV)
+	$(PYTHON) -m pip install --upgrade pip
+	$(PIP) install -r requirements.txt
 	echo $(CURDIR)/$(VENV)
 
 build: $(VENV)
@@ -16,17 +19,17 @@ build: $(VENV)
 
 test: $(VENV)
 	clear
-	-$(PYTHON) -m pytest tests --test_env=$(TESTENV) --alluredir=allure-results -W ignore::Warning;
+	-$(PYTHON) -m pytest tests --test_env=$(TESTENV) -W ignore::Warning;
 	sleep 5;
 	allure serve allure-results;
 
 test-login: $(VENV)
 	clear
-	-$(PYTHON) -m pytest tests/test_login.py --test_env=$(TESTENV) --alluredir=allure-results -W ignore::Warning;
+	-$(PYTHON) -m pytest tests/test_login.py --test_env=$(TESTENV) -W ignore::Warning;
 
 test-people: $(VENV)
 	clear
-	-$(PYTHON) -m pytest tests/test_people.py --test_env=$(TESTENV) --alluredir=allure-results -W ignore::Warning;
+	-$(PYTHON) -m pytest tests/test_people.py --test_env=$(TESTENV) -W ignore::Warning;
 
 report:
 	clear
