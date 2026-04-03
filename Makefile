@@ -14,19 +14,24 @@ setup:
 	echo $(CURDIR)/$(VENV)
 
 build: $(VENV)
+	clear
 	$(PIP) install -r requirements.txt
 
 test: $(VENV)
-	$(PYTHON) -m pytest tests --test_env=$(TESTENV) -W ignore::Warning
+	clear
+	-$(PYTHON) -m pytest tests --test_env=$(TESTENV) -W ignore::Warning;
+	sleep 5;
+	allure serve allure-results;
 
-test-ui: $(VENV)
-	$(PYTHON) -m pytest tests/test_ui.py -m ui --test_env=$(TESTENV) -W ignore::Warning
+test-login: $(VENV)
+	clear
+	-$(PYTHON) -m pytest tests/test_login.py --test_env=$(TESTENV) -W ignore::Warning;
 
-test-api: $(VENV)
-	$(PYTHON) -m pytest tests/test_api.py -m api --test_env=$(TESTENV) -W ignore::Warning
-
-test-shared-auth: $(VENV)
-	$(PYTHON) -m pytest tests/test_ui_api_shared_auth.py -m shared_auth --test_env=$(TESTENV) -W ignore::Warning
+test-people: $(VENV)
+	clear
+	-$(PYTHON) -m pytest tests/test_people.py --test_env=$(TESTENV) -W ignore::Warning;
 
 report:
+	clear
 	allure generate allure-results -o allure-report --clean
+	allure open allure-report

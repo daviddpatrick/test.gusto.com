@@ -1,37 +1,32 @@
-"""Page object for the example login form."""
-
-
 class LoginPage:
-    """Wraps the login interactions for the demo UI."""
-
     def __init__(self, page):
         self.page = page
 
-        self.username_input = page.locator('[data-test="username"]')
-        self.password_input = page.locator('[data-test="password"]')
-        self.submit_button = page.locator('[data-test="login-button"]')
-        self.error_banner = page.locator('[data-test="error"]')
+        self.email_input = page.locator('[data-testid="email-input"]')
+        self.email_submit = page.locator('[data-testid="email-submit-button"]')
+        self.password_input = page.locator('[data-testid="password-input"]')
+        self.password_submit = page.locator('[data-testid="password-submit-button"]')
+        self.email_button = page.locator('[data-testid="email-button"]')
 
     def navigate(self, url):
-        """Opens the login page."""
         self.page.goto(url)
 
-    def enter_username(self, username):
-        """Fills the username field."""
-        self.username_input.fill(username)
+    def enter_email(self, email):
+        self.email_input.fill(email)
+
+    def continue_from_email(self):
+        self.email_submit.click()
 
     def enter_password(self, password):
-        """Fills the password field."""
         self.password_input.fill(password)
 
-    def submit(self):
-        """Submits the login form."""
-        self.submit_button.click()
+    def submit_password(self):
+        self.password_submit.click()
 
-    def login(self, username, password, url):
-        """Logs in with the provided credentials."""
+    def login(self, email, password, url):
         self.navigate(url)
-        self.username_input.wait_for(state="visible")
-        self.enter_username(username)
+        self.enter_email(email)
+        self.continue_from_email()
+        self.password_input.wait_for(state="visible")
         self.enter_password(password)
-        self.submit()
+        self.submit_password()

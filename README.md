@@ -1,71 +1,36 @@
-# UI + API Test Model Repo
+# test.gusto.com
 
-This repository is now a Python `pytest` + Playwright starter for teams that want one place to keep:
 
-- UI browser tests
-- API tests
-- shared-auth tests that reuse browser login state for backend calls
+## Run Code:
+To run the pytest tests, run the following Makefile commands from the root directory of the project:
 
-The default sample setup uses public demo targets so the structure is easy to understand:
+	make setup
+	make build
+	make test
 
-- UI demo app: `https://www.saucedemo.com`
-- API demo app: `https://jsonplaceholder.typicode.com`
+## Makefile Commands Explained:
+### Make setup
+This command will create a virtual environment.
 
-## What the repo shows
+### Make build
+This command will install the required packages.
 
-- `tests/test_ui.py`: basic UI smoke coverage
-- `tests/test_api.py`: direct API coverage through a reusable client
-- `tests/test_ui_api_shared_auth.py`: the pattern for taking browser auth and reusing it in API requests
-- `pages/`: page objects and UI flows
-- `common/clients/`: reusable API clients
-- `common/fixtures/`: shared pytest fixtures for browser, config, clients, and logging
+### Make test
+This command will run all pytest tests and also generate an Allure report. The report should bring up a browser window.
 
-## Quick start
+## Allure Setup
+Install the Allure Python plugin and CLI:
 
-```bash
-make setup
-make test
-```
+	pip install allure-pytest
+	brew install allure
 
-Run specific suites:
+## Environment Variables
+Create a `.env` file in the project root with the required credentials and URLs:
 
-```bash
-make test-ui
-make test-api
-make test-shared-auth
-```
-
-Generate an Allure report after a run:
-
-```bash
-make report
-```
-
-## Configuration
-
-Base config lives in [common/config/us.json](/Users/davidpatrick/test.framework.com/common/config/us.json). You can either edit that file or override values with a local `.env`.
-
-Supported environment variables:
-
-```bash
-UI_BASE_URL=https://your-ui-app.example.com
-API_BASE_URL=https://your-api.example.com
-UI_USERNAME=your_username
-UI_PASSWORD=your_password
-HEADLESS=true
-SHARED_AUTH_BASE_URL=https://your-ui-app.example.com
-SHARED_AUTH_ENDPOINT=/api/me
-SHARED_AUTH_EXPECTED_TEXT=expected-string
-```
-
-## Adapting this to your app
-
-1. Replace the demo selectors in [pages/login_page.py](/Users/davidpatrick/test.framework.com/pages/login_page.py) and [pages/inventory_page.py](/Users/davidpatrick/test.framework.com/pages/inventory_page.py).
-2. Update the endpoints in [common/clients/example_api_client.py](/Users/davidpatrick/test.framework.com/common/clients/example_api_client.py).
-3. Change config values in [common/config/us.json](/Users/davidpatrick/test.framework.com/common/config/us.json).
-4. Turn on the shared-auth example by setting `"shared_auth_enabled": true` once your app exposes an authenticated endpoint that works with browser session cookies.
+	GUSTO_USERNAME=your_email
+	GUSTO_PASSWORD=your_password
+	GUSTO_URL=https://gusto.com
+	GUSTO_TEST_URL=https://test.gusto.com
 
 ## Notes
-
-- Generated artifacts such as `allure-results/` and `results/` should stay out of version control.
-- The shared-auth test is intentionally skipped by default because every app exposes authenticated APIs differently.
+Playwright is configured to run headed with `no_viewport=True` for stability on Gusto.
